@@ -48,8 +48,8 @@ process processA {
 	input:
 	val x from processAInput
 	file(a_file) from processAInputFiles
-	file("*") from ch_utils
-	file("*") from ch_src
+	each file("*") from ch_utils
+	each file("*") from ch_src
 
 	output:
 	val x into processAOutput

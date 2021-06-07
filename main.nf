@@ -44,12 +44,14 @@ processAInputFiles = Channel.fromPath("${params.dataLocation}/*${params.fileSuff
 process processA {
 	publishDir "${params.output}/${task.hash}", mode: 'copy'
 	tag "cpus: ${task.cpus}, cloud storage: ${cloud_storage_file}"
+	// beforeScript 'aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin 196670327513.dkr.ecr.eu-west-2.amazonaws.com'
+	beforeScript "eval `aws ecr get-login --registry-ids ${params.private_ecr_registry_id} --no-include-email --region eu-west-2` && docker pull 196670327513.dkr.ecr.eu-west-2.amazonaws.com/example/repository"
 
 	input:
 	val x from processAInput
 	file(a_file) from processAInputFiles
-	file("*") from ch_utils
-	file("*") from ch_src
+	each file("*") from ch_utils
+	each file("*") from ch_src
 
 	output:
 	val x into processAOutput
@@ -67,13 +69,6 @@ process processA {
 	done;
 	sleep \$timeToWait
 	echo "task cpus: ${task.cpus}"
-
-	ls -l utils/
-	ls -l src/
-	ls -l src/nanocompare/
-
-	python3 utils/print.py
-	python3 utils/write.py
-	python3 src/nanocompare/nanoscript.py
+	ls -l
 	"""
 }

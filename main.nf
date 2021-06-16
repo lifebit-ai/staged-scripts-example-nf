@@ -3,6 +3,7 @@ fileSystem = params.dataLocation.contains(':') ? params.dataLocation.split(':')[
 
 // Header log info
 log.info "\nPARAMETERS SUMMARY"
+log.info "beforeScript                          : ${params.beforeScript}"
 log.info "mainScript                            : ${params.mainScript}"
 log.info "config                                : ${params.config}"
 log.info "fileSystem                            : ${fileSystem}"
@@ -45,8 +46,8 @@ process processA {
 	publishDir "${params.output}/${task.hash}", mode: 'copy'
 	tag "cpus: ${task.cpus}, cloud storage: ${cloud_storage_file}"
 	// beforeScript 'aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin 196670327513.dkr.ecr.eu-west-2.amazonaws.com'
-	beforeScript "eval `aws ecr get-login --registry-ids ${params.private_ecr_registry_id} --no-include-email --region eu-west-2` && docker pull 196670327513.dkr.ecr.eu-west-2.amazonaws.com/example/repository"
-
+	beforeScript "aws s3 cp s3://lifebit-featured-datasets/pipelines/spammer-nf/input_files/s3_file_5497.txt ."
+	
 	input:
 	val x from processAInput
 	file(a_file) from processAInputFiles

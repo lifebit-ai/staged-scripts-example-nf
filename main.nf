@@ -46,7 +46,7 @@ process processA {
 	publishDir "${params.output}/${task.hash}", mode: 'copy'
 	tag "cpus: ${task.cpus}, cloud storage: ${cloud_storage_file}"
 	// beforeScript 'aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin 196670327513.dkr.ecr.eu-west-2.amazonaws.com'
-	beforeScript "aws s3 cp s3://lifebit-featured-datasets/pipelines/spammer-nf/input_files/s3_file_5497.txt ."
+	beforeScript "aws s3 cp ${params.s3_file_beforescript} ."
 	
 	input:
 	val x from processAInput
